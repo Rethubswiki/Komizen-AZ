@@ -5,6 +5,9 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.github/dependabot.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -26,20 +29,45 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3.3.2
+        with:
+          gradle-version: "8.7"
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      # FIX 1: Verificar que gradlew existe antes de chmod
+      - name: Verify gradle wrapper
+        run: |
+          if [ ! -f gradlew ]; then
+            echo "::warning::gradlew not found, will use system gradle"
+          else
+            chmod +x gradlew
+          fi
 
+      # FIX 2: Fallback a 'gradle' si falta wrapper jar
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
+        run: |
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            ./gradlew ktlintCheck
+          else
+            gradle ktlintCheck
+          fi
 
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
+        run: |
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            ./gradlew testDebugUnitTest
+          else
+            gradle testDebugUnitTest
+          fi
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug
+        run: |
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            ./gradlew assembleDebug
+          else
+            gradle assembleDebug
+          fi
 
       - name: Upload debug APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
@@ -54,5 +82,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - uses: gradle/actions/setup-gradle@v3.3.2
-      - run: chmod +x gradlew
-      - run: ./gradlew lintDebug
+        with:
+          gradle-version: "8.7"
+      - run: |
+          if [ -f gradlew ]; then chmod +x gradlew; fi
+      - run: |
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            ./gradlew lintDebug
+          else
+            gradle lintDebug
+          fi
