@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.idea/
+.vscode/
+*.swp
+.DS_Store
+local.properties
+*.jks
+*.keystore
+secrets.properties
+*.env
+captures/
+.externalNativeBuild/
+.cxx/

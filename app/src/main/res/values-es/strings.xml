@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Komizen-AZ</string>
+    <string name="home">Inicio</string>
+    <string name="browse">Explorar</string>
+    <string name="installed">Instaladas</string>
+    <string name="dashboard">Panel</string>
+    <string name="settings">Ajustes</string>
+    <string name="install">Instalar</string>
+    <string name="uninstall">Desinstalar</string>
+    <string name="retry">Reintentar</string>
+    <string name="loading">Cargando…</string>
+    <string name="error_generic">Ocurrió un error</string>
+    <string name="empty_state_extensions">No hay extensiones disponibles</string>
+    <string name="empty_state_installed">No hay extensiones instaladas</string>
+    <string name="search_hint">Buscar extensiones…</string>
+</resources>
